@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:myproject/src/pages/login/login_page.dart';
-import 'package:myproject/src/pages/routes.dart';
+import 'package:myproject/src/routes/routes.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -11,8 +10,11 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: "FirstApp",
       debugShowCheckedModeBanner: false,
+      initialRoute: AppRoute.loginpage,
+      // onGenerateRoute: AppRoute.generateRoute,
+      
       routes: AppRoute.all,
-      home: LoginPage(),
     );
+    
   }
 }
