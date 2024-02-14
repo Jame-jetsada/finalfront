@@ -21,125 +21,222 @@ class _LoginPageState extends State<LoginPage> {
   @override
   void initState() {
     super.initState();
-    usernamecontroller.text = "admin";
+    // usernamecontroller.text = "admin";
   }
 
-  void Login(String username, String password) async {
-    try {
-      final response = await http.get(Uri.parse(
-          'http://10.0.2.2:8000/project-v0/profile/login/$username/$password'));
+  void _OnClick() {
+    // print("login success (${usernamecontroller.text})");
+    Login(
+      usernamecontroller.text.toString(),
+      passwordcontroller.text.toString(),
+      context,
+    );
+  }
 
-      // if (response.statusCode == 200) {
-      //   // การแปลงข้อมูล JSON
-      //   Map<String, dynamic> data = json.decode(response.body);
-      //   print("Response Data: $data");
-      // } else {
-      //   print("HTTP Request failed with status: ${response.statusCode}");
-      // }
+  void Login(String username, String password, BuildContext context) async {
+    // ตรวจสอบว่า username และ password ไม่ใช่ค่าว่าง
+    if (username.isNotEmpty && password.isNotEmpty) {
+      try {
+        final response = await http.get(Uri.parse(
+            'http://10.0.2.2:8000/project-v0/profile/login/$username/$password'));
 
-      if (response.statusCode == 200) {
-        // การแปลงข้อมูล JSON
+        // if (response.statusCode == 200) {
+        //   // การแปลงข้อมูล JSON
+        //   Map<String, dynamic> data = json.decode(response.body);
+        //   print("Response Data: $data");
+        // } else {
+        //   print("HTTP Request failed with status: ${response.statusCode}");
+        // }
 
-        Map<String, dynamic> data = json.decode(response.body);
-        // print("Response Data: $data");
+        if (response.statusCode == 200) {
+          // การแปลงข้อมูล JSON
 
-        // เข้าถึงค่า res_code และ res_msg
-        String resCode = data['res_code'];
-        String resMsg = data['res_msg'];
+          Map<String, dynamic> data = json.decode(response.body);
+          // print("Response Data: $data");
 
-        // ตรวจสอบค่า res_code
-        if (resCode == "000") {
-          print("Login success");
+          // เข้าถึงค่า res_code และ res_msg
+          String resCode = data['res_code'];
+          String resMsg = data['res_msg'];
+
+          // ตรวจสอบค่า res_code
+          if (resCode == "000") {
+            print("Login success");
+            Navigator.pushNamed(context, AppRoute.menupage);
+          } else {
+            print("ล็อคอินไม่ผ่านนะจะ");
+            showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return AlertDialog(
+                  title: Text('ล็อคอินไม่ผ่าน'),
+                  content: Text('กรุณาตรวจสอบชื่อผู้ใช้งานและรหัสผ่านของคุณ'),
+                  actions: <Widget>[
+                    TextButton(
+                      onPressed: () {
+                        Navigator.of(context).pop(); // ปิด pop-up
+                      },
+                      child: Text('OK'),
+                    ),
+                  ],
+                );
+              },
+            );
+          }
         } else {
-          print("ล็อคอินไม่ผ่านนะจะ");
+          print("HTTP Request failed with status: ${response.statusCode}");
         }
-      } else {
-        print("HTTP Request failed with status: ${response.statusCode}");
+      } catch (e) {
+        print(e.toString());
       }
-    } catch (e) {
-      print(e.toString());
     }
   }
+
+  // @override
+  // Widget build(BuildContext context) {
+  //   return Scaffold(
+  //     backgroundColor: const Color.fromARGB(255, 53, 156, 247),
+  //     body: SingleChildScrollView(
+  //         child: Container(
+  //       width: double.infinity,
+  //       child: Padding(
+  //         padding: const EdgeInsets.symmetric(horizontal: 25.0),
+  //         child: Column(
+  //           crossAxisAlignment: CrossAxisAlignment.stretch,
+  //           children: [
+  //             SizedBox(
+  //               height: 150,
+  //             ),
+  //             Container(
+  //               height: 350,
+  //               width: 325,
+  //               decoration: BoxDecoration(
+  //                   color: Colors.white,
+  //                   borderRadius: BorderRadius.circular(10)),
+  //               child: Column(
+  //                 crossAxisAlignment: CrossAxisAlignment.center,
+  //                 children: [
+  //                   SizedBox(height: 30),
+  //                   Text(
+  //                     'กรุณาเข้าสู่ระบบ',
+  //                     style:
+  //                         TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+  //                   ),
+  //                   SizedBox(
+  //                     height: 20,
+  //                   ),
+  //                   Container(
+  //                     width: 250,
+  //                     child: TextField(
+  //                       controller: usernamecontroller,
+  //                       decoration: InputDecoration(labelText: "ชื่อผู้ใช้งาน"),
+  //                     ),
+  //                   ),
+  //                   Container(
+  //                     width: 250,
+  //                     child: TextFormField(
+  //                       controller: passwordcontroller,
+  //                       obscureText: Pass_visible,
+  //                       decoration: InputDecoration(
+  //                           labelText: "รหัสผ่าน",
+  //                           suffixIcon: IconButton(
+  //                             icon: Icon(Pass_visible
+  //                                 ? Icons.visibility_off
+  //                                 : Icons.visibility),
+  //                             onPressed: () {
+  //                               setState(() {
+  //                                 Pass_visible = !Pass_visible;
+  //                               });
+  //                             },
+  //                           )),
+  //                     ),
+  //                   ),
+  //                   SizedBox(
+  //                     height: 30,
+  //                   ),
+  //                   ElevatedButton(
+  //                       onPressed: _OnClick, child: Text('เข้าสู่ระบบ')),
+  //                 ],
+  //               ),
+  //             )
+  //           ],
+  //         ),
+  //       ),
+  //     )),
+  //   );
+  // }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 53, 156, 247),
       body: SingleChildScrollView(
-          child: Container(
-        width: double.infinity,
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 25.0),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              SizedBox(
-                height: 150,
-              ),
+              SizedBox(height: 150),
               Container(
-                height: 350,
-                width: 325,
                 decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(10)),
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                padding: EdgeInsets.all(20),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    SizedBox(height: 30),
                     Text(
                       'กรุณาเข้าสู่ระบบ',
                       style:
                           TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
                     ),
-                    SizedBox(
-                      height: 20,
-                    ),
+                    SizedBox(height: 20),
                     Container(
-                      width: 250,
+                      width: double.infinity,
+                      padding: EdgeInsets.symmetric(horizontal: 20),
                       child: TextField(
                         controller: usernamecontroller,
-                        decoration: InputDecoration(labelText: "ชื่อผู้ใช้งาน"),
+                        decoration: InputDecoration(
+                          labelText: "ชื่อผู้ใช้งาน",
+                          border: OutlineInputBorder(),
+                        ),
                       ),
                     ),
+                    SizedBox(height: 20),
                     Container(
-                      width: 250,
+                      width: double.infinity,
+                      padding: EdgeInsets.symmetric(horizontal: 20),
                       child: TextFormField(
                         controller: passwordcontroller,
                         obscureText: Pass_visible,
                         decoration: InputDecoration(
-                            labelText: "รหัสผ่าน",
-                            suffixIcon: IconButton(
-                              icon: Icon(Pass_visible
-                                  ? Icons.visibility_off
-                                  : Icons.visibility),
-                              onPressed: () {
-                                setState(() {
-                                  Pass_visible = !Pass_visible;
-                                });
-                              },
-                            )),
+                          labelText: "รหัสผ่าน",
+                          border: OutlineInputBorder(),
+                          suffixIcon: IconButton(
+                            icon: Icon(Pass_visible
+                                ? Icons.visibility_off
+                                : Icons.visibility),
+                            onPressed: () {
+                              setState(() {
+                                Pass_visible = !Pass_visible;
+                              });
+                            },
+                          ),
+                        ),
                       ),
                     ),
-                    SizedBox(
-                      height: 30,
-                    ),
+                    SizedBox(height: 20),
                     ElevatedButton(
-                        onPressed: _OnClick, child: Text('เข้าสู่ระบบ')),
+                      onPressed: _OnClick,
+                      child: Text('เข้าสู่ระบบ'),
+                    ),
                   ],
                 ),
-              )
+              ),
             ],
           ),
         ),
-      )),
+      ),
     );
-  }
-
-  void _OnClick() {
-    // print("login success (${usernamecontroller.text})");
-
-    Login(
-        usernamecontroller.text.toString(), passwordcontroller.text.toString());
-    Navigator.pushNamed(context, AppRoute.menupage);
   }
 }
