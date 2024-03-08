@@ -37,6 +37,9 @@ dependencies:
   cupertino_icons: ^1.0.2
   http: ^1.1.0
   flutter_local_notifications: ^16.3.2
+  flutter_barcode_scanner: ^2.0.0
+  shared_preferences: ^2.0.18
+  #fluttertoast: ^8.2.4
 
 dev_dependencies:
   flutter_test:
@@ -60,9 +63,8 @@ flutter:
   uses-material-design: true
 
   # To add assets to your application, add an assets section, like this:
-  # assets:
-  #  - images/logo.png
-  #   - images/a_dot_ham.jpeg
+  assets:
+    - assets/images/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

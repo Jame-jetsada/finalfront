@@ -1,53 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:myproject/src/pages/check/reportcheck_page.dart';
+import 'package:myproject/src/pages/check/save_edit_page.dart';
 
-import 're_check_page.dart';
+import '../pages/check/check_page.dart';
 
-class CheckPage extends StatefulWidget {
-  const CheckPage({super.key});
+class NavigationPage extends StatefulWidget {
+  const NavigationPage({super.key});
 
   @override
-  State<CheckPage> createState() => _CheckPageState();
+  State<NavigationPage> createState() => _NavigationPageState();
 }
 
-class MyButton extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return ElevatedButton(
-      onPressed: () {},
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(Icons.add),
-          SizedBox(width: 8),
-          Text('Add Item'),
-        ],
-      ),
-    );
-  }
-}
-
-class _CheckPageState extends State<CheckPage> {
+class _NavigationPageState extends State<NavigationPage> {
   int index = 0;
-  final screen = [
-    // Center(child: Text('นับสินค้า', style: TextStyle(fontSize: 72))),
-    // Center(child: Text('ดูรายงานการนับ', style: TextStyle(fontSize: 72)))
-    ReCheckPage(),
-    ReCheckPage2(),
-  ];
+  final screen = [CheckPage(), ReportCheckPage(), SaveEditPage()];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        automaticallyImplyLeading: false,
-        title: Text('นับสินค้า'),
+        backgroundColor: Color.fromARGB(255, 80, 177, 233),
+        //automaticallyImplyLeading: false,
+        title: Text('เลือกเมนู'),
         centerTitle: true,
-        leading: IconButton(
-          icon: Icon(Icons.person_pin),
-          onPressed: () {},
-          iconSize: 30,
-        ),
         actions: <Widget>[
           IconButton(
             icon: Icon(Icons.menu),
@@ -68,7 +44,7 @@ class _CheckPageState extends State<CheckPage> {
               TextStyle(fontSize: 18, fontWeight: FontWeight.w500)),
         ),
         child: NavigationBar(
-          backgroundColor: Color.fromARGB(255, 53, 156, 247),
+          backgroundColor: Color.fromARGB(255, 80, 177, 233),
           height: 80,
           selectedIndex: index,
           onDestinationSelected: (index) => setState(() => this.index = index),
@@ -80,6 +56,8 @@ class _CheckPageState extends State<CheckPage> {
             NavigationDestination(
                 icon: FaIcon(FontAwesomeIcons.sheetPlastic),
                 label: 'ดูรายงานการนับ'),
+            NavigationDestination(
+                icon: Icon(Icons.save_as_rounded), label: 'แก้ไขและบันทึก')
           ],
         ),
       ),

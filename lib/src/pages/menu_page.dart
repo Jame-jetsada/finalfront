@@ -10,73 +10,86 @@ class MenuPage extends StatefulWidget {
 
 class _MenuPageState extends State<MenuPage> {
   @override
-
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Color.fromARGB(255, 80, 177, 233),
         automaticallyImplyLeading: false,
         title: Text('เลือกเมนู'),
         centerTitle: true,
-        leading: IconButton(icon: Icon(Icons.person_pin),
+        leading: IconButton(
+          icon: Icon(Icons.person_pin),
           onPressed: () {},
           iconSize: 30,
         ),
         actions: <Widget>[
-          IconButton(icon: Icon(Icons.menu),
-          onPressed: () {},
-          iconSize: 30, 
-          ),          
+          IconButton(
+            icon: Icon(Icons.menu),
+            onPressed: () {},
+            iconSize: 30,
+          ),
         ],
       ),
-
       body: SingleChildScrollView(
         child: Container(
-            width: double.infinity,
-            child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 25.0),
-              child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    SizedBox(
-                      height: 50
+            padding: EdgeInsets.all(20.0),
+            child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  SizedBox(height: 30),
+                  ElevatedButton(
+                    child: Padding(
+                      padding: EdgeInsets.all(10.0),
+                      child: Text(
+                        'นับสินค้า',
+                        style: TextStyle(fontSize: 18),
+                      ),
                     ),
-      
-                    ElevatedButton(
-                      child: Text('นับสินค้า'),
-                      onPressed: (){
-                        Navigator.of(context).pushNamed(AppRoute.checkpage);
-                      },
+                    onPressed: () {
+                      Navigator.of(context).pushNamed(AppRoute.navigationpage);
+                    },
+                    style: ElevatedButton.styleFrom(
+                      primary: Color.fromARGB(255, 80, 177, 233),
                     ),
-      
-                    SizedBox(
-                      height: 10
+                  ),
+                  SizedBox(height: 10),
+                  ElevatedButton(
+                    child: Padding(
+                      padding: EdgeInsets.all(10.0),
+                      child: Text(
+                        'รายงานปัญหา',
+                        style: TextStyle(fontSize: 18),
+                      ),
                     ),
-      
-                    ElevatedButton(
-                      child: Text('รายงานปัญหา'),
+                    onPressed: () {
+                      Navigator.of(context).pushNamed(AppRoute.reportpage);
+                    },
+                    style: ElevatedButton.styleFrom(
+                      primary: Color.fromARGB(255, 80, 177, 233),
+                    ),
+                  ),
+                  SizedBox(height: 10),
+                  Container(
+                    height: 600,
+                    alignment: Alignment.bottomLeft,
+                    child: IconButton(
                       onPressed: () {
-                        Navigator.of(context).pushNamed(AppRoute.reportpage);
+                        _handleLogout(context);
                       },
+                      icon: Icon(Icons.logout),
+                      iconSize: 50,
                     ),
-      
-                    Container(
-                      height: 600,
-                      alignment: Alignment.bottomLeft,
-                      child: IconButton(
-                        onPressed: () {
-                          Navigator.pop(context);
-                        }, 
-                        icon: Icon(Icons.logout),
-                        iconSize: 50,
-                      ),                      
-                    )                  
-                  ]),
-            )),
+                  ),
+                ])),
       ),
     );
   }
 
-  void _OnClick(){
-    // Check(Navigator.pushNamed(context, AppRoute.check));
+  void _handleLogout(BuildContext context) {
+    Navigator.pushNamedAndRemoveUntil(
+      context,
+      AppRoute.loginpage,
+      (Route<dynamic> route) => false,
+    );
   }
 }

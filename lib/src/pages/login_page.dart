@@ -1,8 +1,6 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:myproject/src/routes/routes.dart';
-
 import 'package:http/http.dart' as http;
 
 class LoginPage extends StatefulWidget {
@@ -31,6 +29,9 @@ class _LoginPageState extends State<LoginPage> {
       passwordcontroller.text.toString(),
       context,
     );
+
+    // ใส่ในตอนที่ไม่ได้รันแบคเอน
+    // Navigator.popAndPushNamed(context, AppRoute.menupage);
   }
 
   void Login(String username, String password, BuildContext context) async {
@@ -63,7 +64,7 @@ class _LoginPageState extends State<LoginPage> {
             print("Login success");
             Navigator.pushNamed(context, AppRoute.menupage);
           } else {
-            print("ล็อคอินไม่ผ่านนะจะ");
+            print("Login failed");
             showDialog(
               context: context,
               builder: (BuildContext context) {
@@ -91,91 +92,23 @@ class _LoginPageState extends State<LoginPage> {
     }
   }
 
-  // @override
-  // Widget build(BuildContext context) {
-  //   return Scaffold(
-  //     backgroundColor: const Color.fromARGB(255, 53, 156, 247),
-  //     body: SingleChildScrollView(
-  //         child: Container(
-  //       width: double.infinity,
-  //       child: Padding(
-  //         padding: const EdgeInsets.symmetric(horizontal: 25.0),
-  //         child: Column(
-  //           crossAxisAlignment: CrossAxisAlignment.stretch,
-  //           children: [
-  //             SizedBox(
-  //               height: 150,
-  //             ),
-  //             Container(
-  //               height: 350,
-  //               width: 325,
-  //               decoration: BoxDecoration(
-  //                   color: Colors.white,
-  //                   borderRadius: BorderRadius.circular(10)),
-  //               child: Column(
-  //                 crossAxisAlignment: CrossAxisAlignment.center,
-  //                 children: [
-  //                   SizedBox(height: 30),
-  //                   Text(
-  //                     'กรุณาเข้าสู่ระบบ',
-  //                     style:
-  //                         TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
-  //                   ),
-  //                   SizedBox(
-  //                     height: 20,
-  //                   ),
-  //                   Container(
-  //                     width: 250,
-  //                     child: TextField(
-  //                       controller: usernamecontroller,
-  //                       decoration: InputDecoration(labelText: "ชื่อผู้ใช้งาน"),
-  //                     ),
-  //                   ),
-  //                   Container(
-  //                     width: 250,
-  //                     child: TextFormField(
-  //                       controller: passwordcontroller,
-  //                       obscureText: Pass_visible,
-  //                       decoration: InputDecoration(
-  //                           labelText: "รหัสผ่าน",
-  //                           suffixIcon: IconButton(
-  //                             icon: Icon(Pass_visible
-  //                                 ? Icons.visibility_off
-  //                                 : Icons.visibility),
-  //                             onPressed: () {
-  //                               setState(() {
-  //                                 Pass_visible = !Pass_visible;
-  //                               });
-  //                             },
-  //                           )),
-  //                     ),
-  //                   ),
-  //                   SizedBox(
-  //                     height: 30,
-  //                   ),
-  //                   ElevatedButton(
-  //                       onPressed: _OnClick, child: Text('เข้าสู่ระบบ')),
-  //                 ],
-  //               ),
-  //             )
-  //           ],
-  //         ),
-  //       ),
-  //     )),
-  //   );
-  // }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 53, 156, 247),
+      backgroundColor: Color.fromARGB(255, 80, 177, 233),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 25.0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              SizedBox(height: 150),
+              SizedBox(
+                height: 90,
+              ),
+              Image(
+                  image: AssetImage('assets/images/logo.png'),
+                  width: 400,
+                  height: 200),
               Container(
                 decoration: BoxDecoration(
                   color: Colors.white,
