@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:http/http.dart' as http;
-import 'package:myproject/src/pages/check/controller.dart';
+import 'package:myproject/src/pages/controller/productinfo.dart';
 import 'package:myproject/src/routes/routes.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -193,8 +193,6 @@ class _CheckPageState extends State<CheckPage> {
             prefs.setString("Itm_Desc1", data["datas"][0]["Itm_Desc1"]);
             prefs.setStringList("Product_image",
                 List<String>.from(data["datas"][0]["Product_image"]));
-            // String imageUrls = data["datas"][0]["Product_image"];
-            // prefs.setString("itmImageUrl", imageUrls);
             Navigator.pushNamed(context, AppRoute.detailpage);
           } else {
             print("no data");
@@ -236,6 +234,11 @@ class _CheckPageState extends State<CheckPage> {
             SizedBox(height: 50),
             TextField(
               controller: _controller,
+              keyboardType: TextInputType.number,
+              inputFormatters: <TextInputFormatter>[
+                FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
+              ],
+              maxLength: 13,
               decoration: InputDecoration(
                 enabledBorder: OutlineInputBorder(),
                 focusedBorder: OutlineInputBorder(),

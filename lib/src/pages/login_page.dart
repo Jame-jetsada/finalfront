@@ -1,7 +1,9 @@
 import 'dart:convert';
+import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:myproject/src/routes/routes.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -13,6 +15,7 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   final usernamecontroller = TextEditingController();
   final passwordcontroller = TextEditingController();
+  GetProfile getProfile = GetProfile();
 
   bool Pass_visible = true;
 
@@ -38,53 +41,67 @@ class _LoginPageState extends State<LoginPage> {
     // ตรวจสอบว่า username และ password ไม่ใช่ค่าว่าง
     if (username.isNotEmpty && password.isNotEmpty) {
       try {
-        final response = await http.get(Uri.parse(
-            'http://10.0.2.2:8000/project-v0/profile/login/$username/$password'));
+        final response = await http.post(
+          Uri.parse('http://10.0.2.2:8000/project-v0/auth/login-mobile'),
+          headers: <String, String>{
+            'Content-Type': 'application/json; charset=UTF-8',
+          },
+          body: jsonEncode(<String, String>{
+            'username': username,
+            'password': password,
+          }),
+        );
 
-        // if (response.statusCode == 200) {
-        //   // การแปลงข้อมูล JSON
-        //   Map<String, dynamic> data = json.decode(response.body);
-        //   print("Response Data: $data");
-        // } else {
-        //   print("HTTP Request failed with status: ${response.statusCode}");
-        // }
+        // print(response.body);
 
-        if (response.statusCode == 200) {
-          // การแปลงข้อมูล JSON
+        // การแปลงข้อมูล JSON
+        Map<String, dynamic> data = json.decode(response.body);
+        // เข้าถึงค่า res_code และ res_msg
+        String resCode = data['res_code'];
+        String resMsg = data['res_msg'];
 
-          Map<String, dynamic> data = json.decode(response.body);
-          // print("Response Data: $data");
+        // ตรวจสอบค่า res_code
+        if (resCode == "000") {
+          print("Login success");
 
-          // เข้าถึงค่า res_code และ res_msg
-          String resCode = data['res_code'];
-          String resMsg = data['res_msg'];
+          // ดึง Token จาก response
+          String token = data['datas']['Token'];
+          var profile = getProfile.getProfile();
+          // log(profile.toString());
+          // ดึงข้อมูลจาก token
+          // String firstname = data['datas']['firstname'];
+          // String lastname = data['datas']['lastname'];
+          // String siteName = data['datas']['siteName'];
 
-          // ตรวจสอบค่า res_code
-          if (resCode == "000") {
-            print("Login success");
-            Navigator.pushNamed(context, AppRoute.menupage);
-          } else {
-            print("Login failed");
-            showDialog(
-              context: context,
-              builder: (BuildContext context) {
-                return AlertDialog(
-                  title: Text('ล็อคอินไม่ผ่าน'),
-                  content: Text('กรุณาตรวจสอบชื่อผู้ใช้งานและรหัสผ่านของคุณ'),
-                  actions: <Widget>[
-                    TextButton(
-                      onPressed: () {
-                        Navigator.of(context).pop(); // ปิด pop-up
-                      },
-                      child: Text('OK'),
-                    ),
-                  ],
-                );
-              },
-            );
-          }
+// บันทึกข้อมูลลงใน SharedPreferences
+          SharedPreferences prefs = await SharedPreferences.getInstance();
+          prefs.setString("Token", token);
+          String? tk = prefs.getString("Token");
+          //log(tk!);
+          //prefs.setString("firstname", firstname.toString());
+          // prefs.setString("lastname", lastname.toString());
+          // prefs.setString("siteName", siteName.toString());
+          // ใช้ Token ในการส่งคำขอต่อไป
+          Navigator.pushNamed(context, AppRoute.menupage);
         } else {
-          print("HTTP Request failed with status: ${response.statusCode}");
+          print("Login failed");
+          showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                title: Text('ล็อคอินไม่ผ่าน'),
+                content: Text('กรุณาตรวจสอบชื่อผู้ใช้งานและรหัสผ่านของคุณ'),
+                actions: <Widget>[
+                  TextButton(
+                    onPressed: () {
+                      Navigator.of(context).pop(); // ปิด pop-up
+                    },
+                    child: Text('OK'),
+                  ),
+                ],
+              );
+            },
+          );
         }
       } catch (e) {
         print(e.toString());
@@ -171,5 +188,41 @@ class _LoginPageState extends State<LoginPage> {
         ),
       ),
     );
+  }
+}
+
+class GetProfile {
+  Future<void> getProfile() async {
+    final prefs = await SharedPreferences.getInstance();
+
+    String? token;
+    token = prefs.getString("Token");
+    // log(token!);
+    try {
+      if (token != null) {
+        final response = await http.get(
+          Uri.parse(
+              'http://10.0.2.2:8000/project-v0/profile/getProfileByToken'),
+          headers: <String, String>{
+            'X-Authorization': token,
+          },
+        );
+
+        print(response.body);
+        Map<String, dynamic> data = json.decode(response.body);
+        String resCode = data['res_code'];
+        String resMsg = data['res_msg'];
+
+        if (resCode == "000") {
+          // ทำตามขั้นตอนที่ต้องการเมื่อการร้องขอโปรไฟล์สำเร็จ
+        } else {
+          // ทำตามขั้นตอนที่ต้องการเมื่อการร้องขอโปรไฟล์ไม่สำเร็จ
+        }
+      } else {
+        print('Token is null');
+      }
+    } catch (e) {
+      print(e.toString());
+    }
   }
 }

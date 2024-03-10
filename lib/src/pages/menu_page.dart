@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:myproject/src/pages/sidebar.dart';
 import 'package:myproject/src/routes/routes.dart';
 
 class MenuPage extends StatefulWidget {
@@ -12,23 +13,24 @@ class _MenuPageState extends State<MenuPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      drawer: SideBar(),
       appBar: AppBar(
         backgroundColor: Color.fromARGB(255, 80, 177, 233),
         automaticallyImplyLeading: false,
         title: Text('เลือกเมนู'),
         centerTitle: true,
-        leading: IconButton(
-          icon: Icon(Icons.person_pin),
-          onPressed: () {},
-          iconSize: 30,
-        ),
-        actions: <Widget>[
-          IconButton(
-            icon: Icon(Icons.menu),
-            onPressed: () {},
-            iconSize: 30,
-          ),
-        ],
+        // leading: IconButton(
+        //   icon: Icon(Icons.person_pin),
+        //   onPressed: () {},
+        //   iconSize: 30,
+        // ),
+        // actions: <Widget>[
+        //   IconButton(
+        //     icon: Icon(Icons.menu),
+        //     onPressed: () {},
+        //     iconSize: 30,
+        //   ),
+        // ],
       ),
       body: SingleChildScrollView(
         child: Container(
