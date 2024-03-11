@@ -1,3 +1,6 @@
+import 'dart:ffi';
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:myproject/src/routes/routes.dart';
@@ -12,6 +15,7 @@ class DetailPage extends StatefulWidget {
 
 class _DetailPageState extends State<DetailPage> {
   late String itmDesc1;
+  late String Itm_id;
   late List<String> imageUrls;
 
   //final itmqtyController = TextEditingController();
@@ -35,10 +39,18 @@ class _DetailPageState extends State<DetailPage> {
     });
   }
 
-  void saveProductData(String itmDesc1, String itmqty) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setString("itmDesc1", itmDesc1);
-    prefs.setString("itm_qty", itmqty);
+  void processItemQty(int itemqty) {
+    saveProductData(itemqty);
+  }
+
+  void saveProductData(int itmqty) async {
+    final prefs = await SharedPreferences.getInstance();
+    String? firstname = prefs.getString("firstname");
+    String? lastname = prefs.getString("lastname");
+    String? Itm_id = prefs.getString("Itm_id");
+    String? site_id = prefs.getString("site_id");
+    print(itmqty);
+    print(firstname);
   }
 
   @override
@@ -107,7 +119,10 @@ class _DetailPageState extends State<DetailPage> {
               SizedBox(height: 20),
               ElevatedButton(
                 onPressed: () {
-                  saveProductData(itmDesc1, itmqtyController.text);
+                  int itemqty = 5;
+                  processItemQty(itemqty);
+                  // int itmqty = int.parse(itmqtyController.text);
+                  // saveProductData(itmqty);
                   Navigator.pushNamed(context, AppRoute.navigationpage);
                 },
                 child: Text('บันทึก'),
