@@ -51,7 +51,7 @@ class _MenuPageState extends State<MenuPage> {
                       Navigator.of(context).pushNamed(AppRoute.navigationpage);
                     },
                     style: ElevatedButton.styleFrom(
-                      primary: Color.fromARGB(255, 80, 177, 233),
+                      backgroundColor: Color.fromARGB(255, 80, 177, 233),
                     ),
                   ),
                   SizedBox(height: 10),
@@ -67,7 +67,7 @@ class _MenuPageState extends State<MenuPage> {
                       Navigator.of(context).pushNamed(AppRoute.reportpage);
                     },
                     style: ElevatedButton.styleFrom(
-                      primary: Color.fromARGB(255, 80, 177, 233),
+                      backgroundColor: Color.fromARGB(255, 80, 177, 233),
                     ),
                   ),
                   SizedBox(height: 10),

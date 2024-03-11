@@ -208,13 +208,30 @@ class GetProfile {
           },
         );
 
-        print(response.body);
+        // print(response.body);
         Map<String, dynamic> data = json.decode(response.body);
         String resCode = data['res_code'];
         String resMsg = data['res_msg'];
+        String firstname = data['datas']['firstname'];
+        String lastname = data['datas']['lastname'];
+        String site_name = data['datas']['site_name'];
+        String site_id = data['datas']['site_id'];
+        String emp_id = data['datas']['emp_id'];
+        String emp_position = data['datas']['emp_position'];
 
         if (resCode == "000") {
-          // ทำตามขั้นตอนที่ต้องการเมื่อการร้องขอโปรไฟล์สำเร็จ
+// บันทึกข้อมูลลงใน SharedPreferences
+          SharedPreferences prefs = await SharedPreferences.getInstance();
+          prefs.setString("firstname", firstname.toString());
+          prefs.setString("lastname", lastname.toString());
+          prefs.setString("site_name", site_name.toString());
+          prefs.setString("site_id", site_id.toString());
+          prefs.setString("emp_id", emp_id.toString());
+          prefs.setString("emp_position", emp_position.toString());
+          String? tk = prefs.getString("firstname");
+          log(tk!);
+
+          ;
         } else {
           // ทำตามขั้นตอนที่ต้องการเมื่อการร้องขอโปรไฟล์ไม่สำเร็จ
         }

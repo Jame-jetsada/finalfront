@@ -190,6 +190,7 @@ class _CheckPageState extends State<CheckPage> {
             print("มีสินค้าอยู่ในระบบ");
             print(response.body);
             final prefs = await SharedPreferences.getInstance();
+            prefs.setString("Itm_id", data["datas"][0]["Itm_id"]);
             prefs.setString("Itm_Desc1", data["datas"][0]["Itm_Desc1"]);
             prefs.setStringList("Product_image",
                 List<String>.from(data["datas"][0]["Product_image"]));
