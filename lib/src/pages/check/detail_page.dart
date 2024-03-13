@@ -1,6 +1,3 @@
-import 'dart:ffi';
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:myproject/src/routes/routes.dart';
@@ -39,18 +36,19 @@ class _DetailPageState extends State<DetailPage> {
     });
   }
 
-  void processItemQty(int itemqty) {
-    saveProductData(itemqty);
-  }
-
   void saveProductData(int itmqty) async {
     final prefs = await SharedPreferences.getInstance();
+    await prefs.setInt("itmqty", itmqty);
     String? firstname = prefs.getString("firstname");
     String? lastname = prefs.getString("lastname");
     String? Itm_id = prefs.getString("Itm_id");
     String? site_id = prefs.getString("site_id");
-    print(itmqty);
+
+    print("count : $itmqty");
     print(firstname);
+    print(lastname);
+    print(Itm_id);
+    print(site_id);
   }
 
   @override
@@ -105,10 +103,12 @@ class _DetailPageState extends State<DetailPage> {
               ),
               SizedBox(height: 20),
               TextField(
+                controller: itmqtyController,
                 keyboardType: TextInputType.number,
                 inputFormatters: <TextInputFormatter>[
                   FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
                 ],
+                textAlign: TextAlign.center,
                 decoration: InputDecoration(
                   enabledBorder: OutlineInputBorder(),
                   focusedBorder: OutlineInputBorder(),
@@ -119,10 +119,8 @@ class _DetailPageState extends State<DetailPage> {
               SizedBox(height: 20),
               ElevatedButton(
                 onPressed: () {
-                  int itemqty = 5;
-                  processItemQty(itemqty);
-                  // int itmqty = int.parse(itmqtyController.text);
-                  // saveProductData(itmqty);
+                  int itmqty = int.parse(itmqtyController.text);
+                  saveProductData(itmqty);
                   Navigator.pushNamed(context, AppRoute.navigationpage);
                 },
                 child: Text('บันทึก'),

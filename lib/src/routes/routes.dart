@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:myproject/src/pages/check/check_page.dart';
 import 'package:myproject/src/pages/check/detail_page.dart';
-import 'package:myproject/src/pages/check/reportcheck_page.dart';
 import 'package:myproject/src/pages/check/save_edit_page.dart';
 import 'package:myproject/src/routes/navigation_page.dart';
 import 'package:myproject/src/pages/menu_page.dart';
@@ -16,7 +15,6 @@ class AppRoute {
   static const String reportpage = 'report';
   static const String detailpage = 'detail';
   static const String saveEditpage = 'saveEdit';
-  static const String reportCheckpage = 'reportCheck';
 
   // static Route<dynamic> generateRoute(RouteSettings settings){
   //   switch (settings.name){
@@ -53,6 +51,5 @@ class AppRoute {
         reportpage: (context) => const ReportPage(),
         detailpage: (context) => const DetailPage(),
         saveEditpage: (context) => const SaveEditPage(),
-        reportCheckpage: (context) => const ReportCheckPage()
       };
 }

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:myproject/src/pages/check/reportcheck_page.dart';
 import 'package:myproject/src/pages/check/save_edit_page.dart';
 
 import '../pages/check/check_page.dart';
@@ -14,7 +13,7 @@ class NavigationPage extends StatefulWidget {
 
 class _NavigationPageState extends State<NavigationPage> {
   int index = 0;
-  final screen = [CheckPage(), ReportCheckPage(), SaveEditPage()];
+  final screen = [CheckPage(), SaveEditPage()];
 
   @override
   Widget build(BuildContext context) {
@@ -53,9 +52,6 @@ class _NavigationPageState extends State<NavigationPage> {
               icon: FaIcon(FontAwesomeIcons.checkToSlot, size: 30),
               label: 'นับสินค้า',
             ),
-            NavigationDestination(
-                icon: FaIcon(FontAwesomeIcons.sheetPlastic),
-                label: 'ดูรายงานการนับ'),
             NavigationDestination(
                 icon: Icon(Icons.save_as_rounded), label: 'แก้ไขและบันทึก')
           ],

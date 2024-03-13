@@ -66,21 +66,13 @@ class _LoginPageState extends State<LoginPage> {
 
           // ดึง Token จาก response
           String token = data['datas']['Token'];
-          var profile = getProfile.getProfile();
-          // log(profile.toString());
-          // ดึงข้อมูลจาก token
-          // String firstname = data['datas']['firstname'];
-          // String lastname = data['datas']['lastname'];
-          // String siteName = data['datas']['siteName'];
 
 // บันทึกข้อมูลลงใน SharedPreferences
           SharedPreferences prefs = await SharedPreferences.getInstance();
           prefs.setString("Token", token);
           String? tk = prefs.getString("Token");
-          //log(tk!);
-          //prefs.setString("firstname", firstname.toString());
-          // prefs.setString("lastname", lastname.toString());
-          // prefs.setString("siteName", siteName.toString());
+          getProfile.getProfile();
+
           // ใช้ Token ในการส่งคำขอต่อไป
           Navigator.pushNamed(context, AppRoute.menupage);
         } else {
@@ -197,7 +189,7 @@ class GetProfile {
 
     String? token;
     token = prefs.getString("Token");
-    // log(token!);
+    log(token!);
     try {
       if (token != null) {
         final response = await http.get(
@@ -228,10 +220,14 @@ class GetProfile {
           prefs.setString("site_id", site_id.toString());
           prefs.setString("emp_id", emp_id.toString());
           prefs.setString("emp_position", emp_position.toString());
-          String? tk = prefs.getString("firstname");
-          log(tk!);
-
-          ;
+          // String? tk = prefs.getString("firstname");
+          // log(tk!);
+          print(prefs.getString("firstname"));
+          print(prefs.getString("lastname"));
+          print(prefs.getString("site_name"));
+          print(prefs.getString("site_id"));
+          print(prefs.getString("emp_id"));
+          print(prefs.getString("emp_position"));
         } else {
           // ทำตามขั้นตอนที่ต้องการเมื่อการร้องขอโปรไฟล์ไม่สำเร็จ
         }
