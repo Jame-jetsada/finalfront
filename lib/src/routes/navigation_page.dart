@@ -53,7 +53,7 @@ class _NavigationPageState extends State<NavigationPage> {
               label: 'นับสินค้า',
             ),
             NavigationDestination(
-                icon: Icon(Icons.save_as_rounded), label: 'แก้ไขและบันทึก')
+                icon: Icon(Icons.save_as_rounded), label: 'ประวัติการนับสินค้า')
           ],
         ),
       ),

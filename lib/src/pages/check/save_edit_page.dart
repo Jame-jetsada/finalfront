@@ -1,5 +1,8 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:http/http.dart' as http;
 
 class SaveEditPage extends StatefulWidget {
   const SaveEditPage({Key? key});
@@ -9,53 +12,91 @@ class SaveEditPage extends StatefulWidget {
 }
 
 class _SaveEditPageState extends State<SaveEditPage> {
-  String? firstname;
-  String? lastname;
-  String? itmId;
-  String? siteId;
-  String? Itm_Desc1;
-  int? itmqty;
+  List<dynamic> data = [];
+  int? CountAllSite;
+  int? CountedProduct;
 
   @override
   void initState() {
     super.initState();
-    getData();
+    getCountProductAll();
   }
 
-  void getData() async {
+  void getCountProductAll() async {
     final prefs = await SharedPreferences.getInstance();
-    setState(() {
-      firstname = prefs.getString("firstname");
-      lastname = prefs.getString("lastname");
-      itmId = prefs.getString("Itm_id");
-      siteId = prefs.getString("site_id");
-      Itm_Desc1 = prefs.getString("Itm_Desc1");
-      itmqty = prefs.getInt("itmqty");
-    });
+    String? site_id = prefs.getString("site_id");
+    try {
+      final response = await http.get(Uri.parse(
+          'http://10.0.2.2:8000/project-v0/product/getCountProductAll/$site_id'));
+
+      if (response.statusCode == 200) {
+        print(response.body);
+        Map<String, dynamic> responseData = json.decode(response.body);
+        setState(() {
+          CountAllSite = responseData['CountAllSite'];
+          CountedProduct = responseData['CountedProduct'];
+          data = json.decode(response.body)['datas'];
+        });
+      } else {
+        throw Exception('Failed to load data');
+      }
+    } catch (e) {
+      print(e.toString());
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: ListView(
-        children: <Widget>[
-          ListTile(
-            title: Text('ProductName: ${Itm_Desc1 ?? 'N/A'}'),
-          ),
-          ListTile(
-            title:
-                Text('Firstname: ${firstname ?? 'N/A'} ${lastname ?? 'N/A'}'),
-          ),
-          ListTile(
-            title: Text('Item ID: ${itmId ?? 'N/A'}'),
-          ),
-          ListTile(
-            title: Text('Site ID: ${siteId ?? 'N/A'}'),
-          ),
-          ListTile(
-            title: Text('Item Quantity: ${itmqty ?? 'N/A'}'),
-          ),
-        ],
+      // body: Padding(
+      //   padding: const EdgeInsets.all(8.0),
+      //   child: ListView.builder(
+      //     itemCount: data.length,
+      //     itemBuilder: (context, index) {
+      //       var item = data[index];
+      //       return Card(
+      //         child: ListTile(
+      //           title: Text(
+      //               'ชื่อสินค้า: ${item['item_desc1']} \nจำนวน: ${item['item_qty']} \nวันที่และเวลา: ${item['count_date']}'),
+      //           subtitle: Text('ชื่อผู้นับ: ${item['name']}'),
+      //         ),
+      //       );
+      //     },
+      //   ),
+      // ),
+      body: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          children: <Widget>[
+            Text(
+              'จำนวนสินค้าทั้งหมด: $CountAllSite',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            Text(
+              'จำนวนสินค้าที่นับไปแล้ว: $CountedProduct',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            Expanded(
+              child: ListView.builder(
+                itemCount: data.length,
+                itemBuilder: (context, index) {
+                  var item = data[index];
+                  return Card(
+                    child: ListTile(
+                      title: Text(
+                          'ชื่อสินค้า: ${item['item_desc1']} \nจำนวน: ${item['item_qty']} \nวันที่และเวลา: ${item['count_date']}'),
+                      subtitle: Text('ชื่อผู้นับ: ${item['name']}'),
+                    ),
+                  );
+                },
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

@@ -1,7 +1,11 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:myproject/src/routes/routes.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import 'package:http/http.dart' as http;
 
 class DetailPage extends StatefulWidget {
   const DetailPage({Key? key});
@@ -14,6 +18,9 @@ class _DetailPageState extends State<DetailPage> {
   late String itmDesc1;
   late String Itm_id;
   late List<String> imageUrls;
+  late String firstname;
+  late String lastname;
+  late String site_id;
 
   //final itmqtyController = TextEditingController();
   late TextEditingController itmqtyController;
@@ -24,6 +31,10 @@ class _DetailPageState extends State<DetailPage> {
     itmDesc1 = '';
     imageUrls = [];
     itmqtyController = TextEditingController();
+    firstname = '';
+    lastname = '';
+    site_id = '';
+    Itm_id = '';
     getData();
   }
 
@@ -37,18 +48,63 @@ class _DetailPageState extends State<DetailPage> {
   }
 
   void saveProductData(int itmqty) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setInt("itmqty", itmqty);
-    String? firstname = prefs.getString("firstname");
-    String? lastname = prefs.getString("lastname");
-    String? Itm_id = prefs.getString("Itm_id");
-    String? site_id = prefs.getString("site_id");
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setInt("itmqty", itmqty);
+      String? firstname = prefs.getString("firstname");
+      String? lastname = prefs.getString("lastname");
+      String? Itm_id = prefs.getString("Itm_id");
+      String? site_id = prefs.getString("site_id");
 
-    print("count : $itmqty");
-    print(firstname);
-    print(lastname);
-    print(Itm_id);
-    print(site_id);
+      final response = await http.post(
+          Uri.parse('http://10.0.2.2:8000/project-v0/product/countProduct'),
+          headers: <String, String>{
+            'Content-Type': 'application/json; charset=UTF-8',
+          },
+          body: jsonEncode(<String, dynamic>{
+            "firstname": firstname,
+            "lastname": lastname,
+            "site_id": site_id,
+            "item_id": Itm_id,
+            "item_qty": itmqty
+          }));
+
+      print(response.body);
+      Map<String, dynamic> data = json.decode(response.body);
+      // เข้าถึงค่า res_code และ res_msg
+      String resCode = data['res_code'];
+      String resMsg = data['res_msg'];
+
+      print(firstname);
+      print(lastname);
+      print(Itm_id);
+      print(site_id);
+      print("count : $itmqty");
+      if (resCode == "000") {
+        print("save data success");
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text('บันทึกสำเร็จ'),
+              content: Text('ทำการบันทึกข้อมูลการนับสินค้าชนิดนี้สำเร็จแล้ว'),
+              actions: <Widget>[
+                TextButton(
+                  onPressed: () {
+                    Navigator.pushNamed(context, AppRoute.navigationpage);
+                  },
+                  child: Text('OK'),
+                ),
+              ],
+            );
+          },
+        );
+      } else {
+        print("save data failed");
+      }
+    } catch (e) {
+      print(e.toString());
+    }
   }
 
   @override
@@ -121,7 +177,6 @@ class _DetailPageState extends State<DetailPage> {
                 onPressed: () {
                   int itmqty = int.parse(itmqtyController.text);
                   saveProductData(itmqty);
-                  Navigator.pushNamed(context, AppRoute.navigationpage);
                 },
                 child: Text('บันทึก'),
                 style: ElevatedButton.styleFrom(

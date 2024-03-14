@@ -17,6 +17,7 @@ class CheckPage extends StatefulWidget {
 
 class _CheckPageState extends State<CheckPage> {
   TextEditingController _controller = TextEditingController();
+  String? site_id;
 
   Future<void> startScanBarcode() async {
     String barcodeScanRes;
@@ -37,21 +38,17 @@ class _CheckPageState extends State<CheckPage> {
     });
   }
 
-  void getID(String id) async {
+  void getID(String id, String site_id) async {
+    final prefs = await SharedPreferences.getInstance();
+    String? site_id = prefs.getString("site_id");
     if (_controller.text.isNotEmpty) {
       try {
         final response = await http.get(
           Uri.parse(
-              'http://10.0.2.2:8000/project-v0/product/getProductById/$id'),
+              'http://10.0.2.2:8000/project-v0/product/getProductById/$id/$site_id'),
         );
 
         if (response.statusCode == 200) {
-          // Map<String, dynamic> jsonResponse = json.decode(response.body);
-          // getInfo src = getInfo.fromJson(jsonResponse);
-          // print("resCode: ${src.resCode}");
-          // print("resMsg: ${src.resMsg}");
-          // print("datas: ${src.datas[0].id}");
-
           Map<String, dynamic> data = json.decode(response.body);
           String resCode = data['res_code'];
           String resMsg = data['res_msg'];
@@ -65,6 +62,24 @@ class _CheckPageState extends State<CheckPage> {
             prefs.setStringList("Product_image",
                 List<String>.from(data["datas"][0]["Product_image"]));
             Navigator.pushNamed(context, AppRoute.detailpage);
+          } else if (resCode == "E102") {
+            showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return AlertDialog(
+                  title: Text("สินค้าชิ้นนี้ถูกนับไปแล้ว"),
+                  content: Text("กรุณานับสินค้าชนิดอื่น"),
+                  actions: <Widget>[
+                    TextButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: Text("ตกลง"),
+                    ),
+                  ],
+                );
+              },
+            );
           } else {
             print("no data");
             showDialog(
@@ -126,7 +141,7 @@ class _CheckPageState extends State<CheckPage> {
             Container(
               child: ElevatedButton(
                 onPressed: () {
-                  getID(_controller.text);
+                  getID(_controller.text, site_id.toString());
                 },
                 child: Text('submit'),
               ),
