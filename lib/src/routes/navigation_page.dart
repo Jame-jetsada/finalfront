@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:myproject/src/pages/check/save_edit_page.dart';
+import 'package:myproject/src/routes/routes.dart';
 
 import '../pages/check/check_page.dart';
 
@@ -20,9 +21,15 @@ class _NavigationPageState extends State<NavigationPage> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Color.fromARGB(255, 80, 177, 233),
-        //automaticallyImplyLeading: false,
+        automaticallyImplyLeading: false,
         title: Text('เลือกเมนู'),
         centerTitle: true,
+        leading: IconButton(
+          onPressed: () {
+            Navigator.of(context).pushNamed(AppRoute.menupage);
+          },
+          icon: Icon(Icons.arrow_back),
+        ),
         actions: <Widget>[
           IconButton(
             icon: Icon(Icons.menu),

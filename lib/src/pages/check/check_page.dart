@@ -125,6 +125,11 @@ class _CheckPageState extends State<CheckPage> {
                 FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
               ],
               maxLength: 13,
+              onChanged: (value) {
+                if (value.length == 13) {
+                  getID(value, site_id.toString());
+                }
+              },
               decoration: InputDecoration(
                 enabledBorder: OutlineInputBorder(),
                 focusedBorder: OutlineInputBorder(),
